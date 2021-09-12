@@ -1,6 +1,6 @@
 import clsx from "clsx";
 import React from "react";
-import { useModal } from "../../packages/use-modal/dist/index.module";
+import { useModal } from "@styless-ui/react-use-modal";
 
 export const ModalSection = (): JSX.Element => {
   const { Modal, open, close, isOpen } = useModal(false, {

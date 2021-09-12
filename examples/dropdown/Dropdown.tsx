@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import { useDropdown } from "../../packages/use-dropdown/dist/index.module";
+import { useDropdown } from "@styless-ui/react-use-doropdown";
 
 export const DropdownSection = (): JSX.Element => {
   const { Dropdown, toggle, isOpen } = useDropdown();
