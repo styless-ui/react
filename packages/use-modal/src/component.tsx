@@ -3,7 +3,7 @@ import { clearAllBodyScrollLocks, disableBodyScroll } from "body-scroll-lock";
 import type { Options as FocusTrapOptions } from "focus-trap";
 import FocusTrap from "focus-trap-react";
 import { useCallback, useEffect, useMemo, useRef } from "react";
-import type { ModalOptions, ModalProps } from "~/hook";
+import type { ModalOptions, ModalProps } from "./hook";
 
 /**
  * Props

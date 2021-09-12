@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { Component } from "~/component";
+import { Component } from "./component";
 
 /**
  * Dropdown Props

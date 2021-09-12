@@ -21,6 +21,7 @@ const config = {
             loader: "ts-loader",
             options: {
               transpileOnly: true,
+              configFile: "tsconfig.dev.json",
             },
           },
         ],

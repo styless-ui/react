@@ -1,7 +1,7 @@
 import type { BodyScrollOptions } from "body-scroll-lock";
 import type { Options as FocusTrapOptions } from "focus-trap";
 import { useCallback, useEffect, useState } from "react";
-import { Component } from "~/component";
+import { Component } from "./component";
 
 /**
  * Modal Options

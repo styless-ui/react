@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import type { FocusableElement } from "tabbable";
 import { tabbable } from "tabbable";
-import type { DropdownProps } from "~/hook";
+import type { DropdownProps } from "./hook";
 
 /**
  * Props
