@@ -1,10 +1,6 @@
 import { useCallback, useState } from "react";
+import type { DropdownProps } from "./component";
 import { Component } from "./component";
-
-/**
- * Dropdown Props
- */
-export type DropdownProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
 
 /**
  * Dropdown hook
@@ -51,9 +47,9 @@ export const useDropdown = (
       if (!isOpen) {
         return null;
       }
-      return <Component {...props} onOpen={open} onClose={close} />;
+      return <Component {...props} onClose={close} />;
     },
-    [close, isOpen, open]
+    [close, isOpen]
   );
 
   return {

@@ -5,7 +5,7 @@
 &nbsp;
 
 <p align="center">
-  Zero Built-in Style React UI Library.
+  Zero Built-in Style UI React Library.
 </p>
 
 &nbsp;
@@ -20,7 +20,7 @@
 
   <img src="https://img.shields.io/bundlephobia/min/@styless-ui/react-use-modal" alt="minified size">
 
-  <img src="https://img.shields.io/david/styless-ui/react" alt="dependencies">
+  <img src="https://img.shields.io/david/styless-ui/react?path=packages%2fuse-modal" alt="dependencies">
 
   <a href="https://www.npmjs.com/package/@styless-ui/react-use-modal">
     <img src="https://img.shields.io/npm/dt/@styless-ui/react-use-modal" alt="downloads">

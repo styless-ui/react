@@ -5,7 +5,7 @@
 &nbsp;
 
 <p align="center">
-  Zero Built-in Style React UI Library.
+  Zero Built-in Style UI React Library.
 </p>
 
 ---

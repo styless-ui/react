@@ -1,131 +1,69 @@
-import type { BodyScrollOptions } from "body-scroll-lock";
-import { clearAllBodyScrollLocks, disableBodyScroll } from "body-scroll-lock";
-import type { Options as FocusTrapOptions } from "focus-trap";
-import FocusTrap from "focus-trap-react";
-import { useCallback, useEffect, useMemo, useRef } from "react";
-import type { ModalOptions, ModalProps } from "./hook";
+import type { EventHandlerOptions } from "@styless-ui/modal";
+import { EventHandler } from "@styless-ui/modal";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+/**
+ * Modal Props
+ */
+export type ModalProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+
+/**
+ * Options
+ */
+export type Options = EventHandlerOptions;
 
 /**
  * Props
  */
 type Props = ModalProps & {
-  onClose?: () => void;
-  options?: ModalOptions;
-};
-
-const defaultBodyScrollOptions: BodyScrollOptions = {
-  reserveScrollBarGap: true,
-  allowTouchMove: (element: HTMLElement | Element): boolean => {
-    const ignoreDatasetKey = "bodyScrollLockIgnore";
-    while (element && element !== document.body) {
-      if ("dataset" in element && ignoreDatasetKey in element.dataset) {
-        return true;
-      }
-      if (element.parentElement) element = element.parentElement;
-    }
-    return false;
-  },
-};
-
-const defaultFocusTrapOptions: FocusTrapOptions = {
-  onActivate: undefined,
-  onDeactivate: undefined,
-  initialFocus: undefined,
-  fallbackFocus: undefined,
-  returnFocusOnDeactivate: undefined,
-  setReturnFocus: undefined,
-  allowOutsideClick: undefined,
-  escapeDeactivates: false,
-  clickOutsideDeactivates: false,
+  options: Options;
 };
 
 /**
  * Component
  */
-export const Component = ({ onClose, children, options = {}, ...props }: Props): JSX.Element => {
+export const Component = ({ children, options, ...props }: Props): JSX.Element => {
   const elementRef = useRef<HTMLDivElement | null>(null);
 
-  // Parse Options
-  const { disableScroll = true, trapFocus = true, closeOnEsc = true } = options;
-
-  const bodyScrollOptions = useMemo((): BodyScrollOptions | false => {
-    if (disableScroll === true) {
-      return defaultBodyScrollOptions;
-    }
-    return disableScroll;
-  }, [disableScroll]);
-
-  const focusTrapOptions = useMemo((): FocusTrapOptions | false => {
-    if (trapFocus === true) {
-      return defaultFocusTrapOptions;
-    }
-    if (trapFocus === false) {
-      return false;
-    }
-    return {
-      ...trapFocus,
-      escapeDeactivates: false,
-      clickOutsideDeactivates: false,
-    };
-  }, [trapFocus]);
-
-  /**
-   * Handle Escape KeyDown
-   */
-  const handleEscapeKeyDwon = useCallback(
-    (event: KeyboardEvent) => {
-      if (onClose === undefined) {
-        return;
-      }
-      if (!closeOnEsc) {
-        return;
-      }
-      event.preventDefault();
-      onClose();
-    },
-    [closeOnEsc, onClose]
-  );
-
-  /**
-   * Handle Keydown
-   */
-  const handleKeyDwon = useCallback(
-    (event: KeyboardEvent): void => {
-      if (elementRef.current === null) {
-        return;
-      }
-      if (event.key === "Escape" || event.key === "Esc") {
-        handleEscapeKeyDwon(event);
-        return;
-      }
-    },
-    [handleEscapeKeyDwon]
-  );
-
-  useEffect(() => {
-    if (elementRef.current === null) {
+  const handleClose = useCallback(() => {
+    const { onClose } = options;
+    if (onClose === undefined) {
       return;
     }
+    onClose();
+  }, [options]);
 
-    if (bodyScrollOptions) {
-      disableBodyScroll(elementRef.current, bodyScrollOptions);
+  const [handler, setHandler] = useState<EventHandler | undefined>(undefined);
+
+  useEffect(() => {
+    setHandler((prev: EventHandler | undefined): EventHandler | undefined => {
+      if (elementRef.current === null) {
+        return prev;
+      }
+      prev?.dispose();
+
+      const { onClose: _onClose, ...handleOptions } = options;
+
+      return new EventHandler(elementRef.current, {
+        ...handleOptions,
+        onClose: handleClose,
+      });
+    });
+  }, [handleClose, options]);
+
+  useEffect(() => {
+    if (!handler) {
+      return;
     }
-    document.addEventListener("keydown", handleKeyDwon, false);
-
+    handler.bind();
     return () => {
-      clearAllBodyScrollLocks();
-      document.removeEventListener("keydown", handleKeyDwon);
+      handler.dispose();
     };
-  }, [bodyScrollOptions, closeOnEsc, elementRef, handleKeyDwon]);
+  }, [handler]);
 
   return (
-    <FocusTrap
-      active={focusTrapOptions !== false}
-      focusTrapOptions={focusTrapOptions !== false ? focusTrapOptions : undefined}
-    >
-      <div {...props} ref={elementRef}>
-        {children}
-      </div>
-    </FocusTrap>
+    <div {...props} ref={elementRef}>
+      {children}
+    </div>
   );
 };

@@ -1,7 +1,7 @@
 {
   "name": "@styless-ui/react",
   "version": "1.0.0",
-  "description": "Zero Built-in Style React UI Library.",
+  "description": "Zero Built-in Style UI React Library.",
   "private": true,
   "license": "MIT",
   "repository": {

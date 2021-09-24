@@ -1,21 +1,11 @@
-import type { BodyScrollOptions } from "body-scroll-lock";
-import type { Options as FocusTrapOptions } from "focus-trap";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import type { ModalProps, Options } from "./component";
 import { Component } from "./component";
 
 /**
  * Modal Options
  */
-export type ModalOptions = {
-  disableScroll?: boolean | BodyScrollOptions;
-  trapFocus?: boolean | Omit<FocusTrapOptions, "escapeDeactivates" | "clickOutsideDeactivates">;
-  closeOnEsc?: boolean;
-};
-
-/**
- * Modal Props
- */
-export type ModalProps = React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+export type ModalOptions = Omit<Options, "onClose">;
 
 /**
  * Modal hook
@@ -45,6 +35,13 @@ export const useModal = (
     setIsOpen(false);
   }, []);
 
+  const componentOptions = useMemo((): Options => {
+    return {
+      ...options,
+      onClose: close,
+    };
+  }, [close, options]);
+
   /**
    * Modal Component
    */
@@ -54,33 +51,10 @@ export const useModal = (
         return null;
       }
 
-      return <Component {...props} options={options} />;
+      return <Component {...props} options={componentOptions} />;
     },
-    [isOpen, options]
+    [isOpen, componentOptions]
   );
-
-  const { closeOnEsc = true } = options;
-
-  const handleKeyDwon = useCallback(
-    (event: KeyboardEvent): void => {
-      if (event.key === "Escape" || event.key === "Esc") {
-        close();
-      }
-    },
-    [close]
-  );
-
-  useEffect(() => {
-    if (closeOnEsc) {
-      document.addEventListener("keydown", handleKeyDwon, false);
-    } else {
-      document.removeEventListener("keydown", handleKeyDwon);
-    }
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDwon);
-    };
-  }, [handleKeyDwon, closeOnEsc]);
 
   return {
     Modal,
